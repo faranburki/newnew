@@ -3,33 +3,40 @@ from firebase_admin import credentials, auth, firestore
 import os
 from pathlib import Path
 
+import json
+
 # Initialize Firebase Admin SDK
 def initialize_firebase():
     """
     Initialize Firebase Admin SDK using serviceAccountKey.json
-    located at backend/app/core/serviceAccountKey.json
+    or GOOGLE_APPLICATION_CREDENTIALS_JSON environment variable.
     """
-    # Get the path to the service account key file
-    # First check if FIREBASE_ADMIN_SDK_PATH env var is set
-    if os.getenv("FIREBASE_ADMIN_SDK_PATH"):
-        service_account_path = os.getenv("FIREBASE_ADMIN_SDK_PATH")
-    else:
-        # Default to backend/app/core/serviceAccountKey.json
-        current_dir = Path(__file__).parent
-        service_account_path = str(current_dir / "serviceAccountKey.json")
+    if len(firebase_admin._apps):
+        return True
 
-    # Check if the file exists
-    if not os.path.exists(service_account_path):
-        raise FileNotFoundError(
-            f"Service account key file not found at {service_account_path}. "
-            "Please place serviceAccountKey.json at backend/app/core/serviceAccountKey.json "
-            "or set FIREBASE_ADMIN_SDK_PATH environment variable."
-        )
+    key_path = str(Path(__file__).parent / "serviceAccountKey.json")
+    
+    try:
+        if os.path.exists(key_path):
+            cred = credentials.Certificate(key_path)
+        elif os.getenv("GOOGLE_APPLICATION_CREDENTIALS_JSON"):
+            cred_json = json.loads(os.environ["GOOGLE_APPLICATION_CREDENTIALS_JSON"])
+            cred = credentials.Certificate(cred_json)
+        else:
+            # Fallback for manual path override
+            env_path = os.getenv("FIREBASE_ADMIN_SDK_PATH")
+            if env_path and os.path.exists(env_path):
+                cred = credentials.Certificate(env_path)
+            else:
+                raise FileNotFoundError(
+                    "Service account credentials not found. "
+                    "Place serviceAccountKey.json in app/core/ or set GOOGLE_APPLICATION_CREDENTIALS_JSON."
+                )
 
-    # Initialize Firebase Admin SDK with credentials
-    if not len(firebase_admin._apps):
-        cred = credentials.Certificate(service_account_path)
         firebase_admin.initialize_app(cred)
+    except Exception as e:
+        print(f"Firebase Init Error: {e}")
+        raise e
 
     return True
 
