@@ -1,29 +1,48 @@
-Here is a **clean, short, GitHub-ready README.md** focused on cloning and running your project:
+Got it, I’ll make it clean, professional, and GitHub-ready for your repo name and username.
 
 ---
 
-````md
-# MediConnect AI
+````md id="r1md01"
+# Medi-Connect-Pakistan
 
-MediConnect AI is an AI-powered healthcare web application for symptom analysis, medical report summarization, doctor recommendation, and appointment booking using FastAPI, Firebase, and Gemini API.
+AI-powered healthcare web application that helps users analyze symptoms, understand medical reports, get doctor recommendations, and book appointments using AI and real-time slot management.
+
+---
+
+## 👨‍💻 Author
+**Faran Burki**
+
+GitHub: https://github.com/faranburki
 
 ---
 
 ## 🚀 Features
-- AI-based symptom analysis  
+
+- AI-based symptom analysis using Gemini API  
 - Medical report summarization  
 - Doctor recommendation system  
-- Slot-based appointment booking  
-- Firebase integration for database and storage  
+- Slot-based appointment booking system  
+- Firebase Firestore database integration  
+- Firebase Storage for medical reports  
 
 ---
 
-## ⚙️ Setup Instructions
+## 🏗️ Tech Stack
+
+- FastAPI (Backend)  
+- Python  
+- Firebase (Firestore + Storage)  
+- Gemini AI API  
+- React / Flutter Web (Frontend optional layer)
+
+---
+
+## 📁 Project Setup
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/your-username/mediconnect-ai.git
-cd mediconnect-ai
+git clone https://github.com/faranburki/Medi-Connect-Pakistan.git
+cd Medi-Connect-Pakistan
 ````
 
 ---
@@ -62,46 +81,34 @@ pip install -r requirements.txt
 
 ### 5. Setup environment variables
 
-Create a `.env` file in the root directory and add:
+Create a `.env` file in root directory:
 
-```
+```env id="env01"
 GEMINI_API_KEY=your_api_key
 FIREBASE_PROJECT_ID=your_project_id
 FIREBASE_PRIVATE_KEY=your_private_key
 ```
 
+---
+
+
+
+## 📌 Important Notes
+
+* Do NOT upload `venv` or `.env` to GitHub
+* Use `.env.example` for reference
+* Make sure Firebase credentials are properly configured
 
 ---
 
----
+## 🎯 Project Goal
 
-## 📦 Tech Stack
-
-* FastAPI
-* Firebase Firestore & Storage
-* Gemini API
-* Python
+To build a smart AI healthcare system that connects patients with doctors efficiently using symptom analysis, AI report processing, and real-time appointment booking.
 
 ---
 
-## 📌 Note
+## 📜 License
 
-Make sure your Firebase credentials and Gemini API key are properly configured before running the project.
+This project is for educational purposes.
 
----
-
-## 👨‍💻 Author
-
-Built as a CS project for AI-based healthcare assistance.
-
-```
-
----
-
-If you want, I can also make this:
-- :contentReference[oaicite:0]{index=0}
-- or :contentReference[oaicite:1]{index=1}
-- or :contentReference[oaicite:2]{index=2}
-
-just tell me, no pressure at all
 ```
