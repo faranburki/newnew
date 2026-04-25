@@ -40,6 +40,10 @@
   },
   "devDependencies": {
     "autoprefixer": "^10.5.0",
-    "postcss": "^8.5.10"
+    "postcss": "^8.5.10",
+    "typescript": "^4.9.5"
+  },
+  "overrides": {
+    "typescript": "^4.9.5"
   }
 }
