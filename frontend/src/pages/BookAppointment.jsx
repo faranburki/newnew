@@ -3,8 +3,10 @@ import { useLocation, useNavigate, useParams, Navigate } from "react-router-dom"
 import axios from "axios";
 import emailjs from "@emailjs/browser";
 import { useAuth } from "../context/AuthContext";
+import { useTranslation } from "react-i18next";
 
 export default function BookAppointment() {
+  const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
   const { doctorId } = useParams();
@@ -120,7 +122,7 @@ export default function BookAppointment() {
           </div>
 
           <h1 className="text-4xl font-extrabold text-gray-900 tracking-tight">
-            Booking Confirmed!
+            {t("appointmentConfirmed")}
           </h1>
           <p className="text-gray-500 text-lg">
             Your appointment has been successfully scheduled
@@ -193,13 +195,13 @@ export default function BookAppointment() {
               onClick={() => navigate("/profile")}
               className="px-8 py-3.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-indigo-700 hover:to-blue-700 text-white font-bold rounded-xl transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"
             >
-              Go to My Profile
+              {t("goToProfile")}
             </button>
             <button
               onClick={() => navigate("/")}
               className="px-8 py-3.5 bg-white border-2 border-gray-200 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition-all"
             >
-              Back to Home
+              {t("backToHome")}
             </button>
           </div>
         </div>
@@ -215,7 +217,7 @@ export default function BookAppointment() {
         <div className="absolute top-0 right-0 w-72 h-72 bg-white/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3"></div>
         <div className="max-w-2xl mx-auto text-center relative z-10">
           <h1 className="text-4xl md:text-5xl font-extrabold text-white tracking-tight mb-3 drop-shadow-lg">
-            Confirm Booking
+            {t("confirmBooking")}
           </h1>
           <p className="text-emerald-200 text-lg">
             Review your appointment details before confirming
@@ -362,10 +364,10 @@ export default function BookAppointment() {
                 <path
                   className="opacity-75"
                   fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.162 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                 ></path>
               </svg>
-              Processing...
+              {t("loading")}
             </>
           ) : (
             <>
@@ -382,7 +384,7 @@ export default function BookAppointment() {
                   d="M5 13l4 4L19 7"
                 />
               </svg>
-              Confirm Booking
+              {t("confirmBooking")}
             </>
           )}
         </button>
@@ -393,7 +395,7 @@ export default function BookAppointment() {
             onClick={() => navigate(`/doctors/${doctorId}`)}
             className="text-emerald-600 hover:text-emerald-800 font-semibold transition-colors underline underline-offset-4"
           >
-            ← Back to Doctor Profile
+            ← {t("backToHome")}
           </button>
         </div>
       </div>

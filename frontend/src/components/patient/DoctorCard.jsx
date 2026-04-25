@@ -1,8 +1,10 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 export default function DoctorCard({ doctor }) {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const getInitials = (name) => {
     if (!name) return "DR";
@@ -14,7 +16,7 @@ export default function DoctorCard({ doctor }) {
   const handleCardClick = () => navigate(`/doctors/${doctor.id}`);
   const handleBookClick = (e) => {
     e.stopPropagation();
-    navigate(`/book/${doctor.id}`);
+    navigate(`/doctors/${doctor.id}`);
   };
 
   const renderStars = (rating) => {
@@ -50,7 +52,7 @@ export default function DoctorCard({ doctor }) {
         onClick={handleBookClick}
         className="flex-shrink-0 w-full sm:w-auto px-5 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold rounded-lg transition-all text-sm shadow-sm"
       >
-        Book Now
+        {t("bookNow")}
       </button>
     </div>
   );

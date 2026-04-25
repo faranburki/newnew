@@ -23,7 +23,7 @@ def analyze_symptoms(symptoms: str) -> dict:
     try:
         system_instruction = _load_prompt("symptom_prompt.txt")
         
-        # Use gemini-1.5-flash as requested
+        # Use gemini-2.5-flash as originally configured
         model = genai.GenerativeModel(
             'gemini-2.5-flash', 
             system_instruction=system_instruction,
@@ -34,6 +34,8 @@ def analyze_symptoms(symptoms: str) -> dict:
         
         # Parse and return JSON
         text = response.text.strip()
+        print(f"DEBUG SYMPTOMS RESPONSE: {text}")
+        
         # Fallback to strip markdown if response_mime_type didn't apply (older clients)
         if text.startswith("```json"):
             text = text[7:]

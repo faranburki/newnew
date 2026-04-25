@@ -1,4 +1,4 @@
-from fastapi import APIRouter, UploadFile, File, HTTPException
+from fastapi import APIRouter, UploadFile, File, HTTPException, Header
 from pydantic import BaseModel
 from typing import List, Dict, Any, Optional
 from app.services.gemini_service import analyze_symptoms, analyze_report
@@ -45,7 +45,10 @@ async def handle_analyze_symptoms(request: SymptomRequest):
     }
 
 @router.post("/analyze-report")
-async def handle_analyze_report(file: UploadFile = File(...)):
+async def handle_analyze_report(
+    file: UploadFile = File(...),
+    authorization: Optional[str] = Header(None)
+):
     contents = await file.read()
     mime_type = file.content_type
     
@@ -59,8 +62,20 @@ async def handle_analyze_report(file: UploadFile = File(...)):
         
     db = get_firestore_db()
     
+    # Extract patientId from token if available
+    patient_id = "anonymous"
+    if authorization and authorization.startswith("Bearer "):
+        token = authorization.split("Bearer ")[1]
+        try:
+            from firebase_admin import auth
+            decoded_token = auth.verify_id_token(token)
+            patient_id = decoded_token.get("uid", "anonymous")
+        except Exception as e:
+            print(f"Token verification failed: {e}")
+            # fall back to anonymous or keep as is
+    
     report_data = {
-        "patientId": "anonymous",
+        "patientId": patient_id,
         "summary": analysis.get("summary", ""),
         "normal_values": analysis.get("normal_values", []),
         "abnormal_values": analysis.get("abnormal_values", []),

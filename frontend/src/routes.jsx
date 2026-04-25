@@ -54,10 +54,24 @@ export default function AppRoutes() {
       <Route path="/register" element={<Register />} />
       <Route path="/doctors" element={<SearchDoctors />} />
       <Route path="/doctors/:id" element={<DoctorProfile />} />
-      <Route path="/book/:doctorId" element={<BookAppointment />} />
-      <Route path="/report-result" element={<ReportSummary />} />
-
+      
       {/* Patient-only routes */}
+      <Route
+        path="/book/:doctorId"
+        element={
+          <ProtectedRoute allowedRole="patient">
+            <BookAppointment />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/report-result"
+        element={
+          <ProtectedRoute allowedRole="patient">
+            <ReportSummary />
+          </ProtectedRoute>
+        }
+      />
       <Route
         path="/profile"
         element={

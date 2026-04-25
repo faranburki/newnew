@@ -82,13 +82,15 @@ async def get_patient_appointments(patient_id: str):
     appts_ref = (
         db.collection("appointments")
         .where("patientId", "==", patient_id)
-        .order_by("createdAt", direction=Query.DESCENDING)
     )
 
     results = []
     for doc in appts_ref.stream():
         data = doc.to_dict()
         data["id"] = doc.id
+        
+        # Keep raw timestamp for sorting
+        raw_created_at = data.get("createdAt")
 
         # Serialize datetime
         if "createdAt" in data and hasattr(data["createdAt"], "isoformat"):
@@ -106,7 +108,16 @@ async def get_patient_appointments(patient_id: str):
                 data["doctorName"] = "Unknown"
                 data["doctorSpecialty"] = ""
 
+        # Use a sortable key (timestamp or empty string fallback)
+        data["_sort_key"] = raw_created_at or ""
         results.append(data)
+
+    # In-memory sort to avoid needing a Firestore composite index
+    results.sort(key=lambda x: str(x["_sort_key"]), reverse=True)
+    
+    # Clean up sort key before returning
+    for r in results:
+        r.pop("_sort_key", None)
 
     return results
 
@@ -118,29 +129,42 @@ async def get_doctor_appointments(doctor_id: str):
 
     today_str = datetime.datetime.now().date().isoformat()
 
+    # Query by doctorId only to avoid needing a composite index for multiple fields
     appts_ref = (
         db.collection("appointments")
         .where("doctorId", "==", doctor_id)
-        .where("date", "==", today_str)
     )
 
     results = []
+    # In-memory filter for today's date
     for doc in appts_ref.stream():
         data = doc.to_dict()
+        
+        # Only include if date matches today
+        if data.get("date") != today_str:
+            continue
+
         data["id"] = doc.id
 
         # Serialize datetime
         if "createdAt" in data and hasattr(data["createdAt"], "isoformat"):
             data["createdAt"] = data["createdAt"].isoformat()
 
-        # Fetch patient profile from users collection
+        # Fetch patient profile from users/{id}/profile/health
         patient_id = data.get("patientId")
         if patient_id:
+            # 1. Basic user data (name, email)
             user_doc = db.collection("users").document(patient_id).get()
+            profile_data = {}
             if user_doc.exists:
-                data["patientProfile"] = user_doc.to_dict()
-            else:
-                data["patientProfile"] = {"name": "Unknown", "email": ""}
+                profile_data = user_doc.to_dict()
+            
+            # 2. Health profile data (bloodType, allergies, etc)
+            health_doc = db.collection("users").document(patient_id).collection("profile").document("health").get()
+            if health_doc.exists:
+                profile_data.update(health_doc.to_dict())
+            
+            data["patientProfile"] = profile_data if profile_data else {"name": "Unknown", "email": ""}
 
         results.append(data)
 

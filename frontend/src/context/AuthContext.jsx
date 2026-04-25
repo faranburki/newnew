@@ -37,6 +37,19 @@ export const AuthProvider = ({ children }) => {
         ...additionalData,
       });
 
+      // Special handling for doctors
+      if (role === "doctor") {
+        await setDoc(doc(db, "doctors", user.uid), {
+          name: name || user.displayName || email.split("@")[0],
+          specialty: "General Physician", // Default
+          fee: 1000, // Default
+          availabilityStatus: true, // Default to available
+          rating: 4.5, // Starting rating
+          bio: "Medical professional dedicated to patient care.",
+          pmdc_number: "Not Verified",
+        });
+      }
+
       setCurrentUser(user);
       setUserRole(role);
       return user;

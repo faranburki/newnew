@@ -2,8 +2,10 @@ import React, { useState, useRef } from "react";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import DoctorCard from "../components/patient/DoctorCard";
+import { useTranslation } from "react-i18next";
 
 export default function Home() {
+  const { t } = useTranslation();
   const [symptoms, setSymptoms] = useState("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
@@ -68,11 +70,11 @@ export default function Home() {
             Powered by Gemini AI
           </div>
           <h1 className="text-4xl md:text-5xl font-extrabold text-white tracking-tight mb-4 drop-shadow-md leading-tight">
-            Describe your symptoms,<br />
-            <span className="text-emerald-200">find the right doctor.</span>
+            {t("heroTitlePart1")}<br />
+            <span className="text-emerald-200">{t("heroTitlePart2")}</span>
           </h1>
           <p className="text-emerald-100 text-lg max-w-xl mx-auto">
-            Type in English or Roman Urdu — our AI instantly recommends the right specialist for you.
+            {t("heroSubtitle")}
           </p>
         </div>
       </div>
@@ -85,7 +87,7 @@ export default function Home() {
               ref={textareaRef}
               disabled={loading}
               className="w-full min-h-[150px] p-5 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:ring-4 focus:ring-emerald-500/15 focus:border-emerald-400 transition-all text-lg resize-none placeholder-gray-400"
-              placeholder="Describe your symptoms... / Apni alamaat bayaan karein&#10;(e.g. bukhaar aur sar dard ho raha hai)"
+              placeholder={t("symptomPlaceholder")}
               value={symptoms}
               onChange={(e) => setSymptoms(e.target.value)}
             ></textarea>
@@ -101,7 +103,7 @@ export default function Home() {
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
               )}
-              {loading ? "Analyzing..." : "🔍 Find Doctor"}
+              {loading ? t("loading") : `🔍 ${t("findDoctor")}`}
             </button>
           </form>
 
@@ -119,7 +121,7 @@ export default function Home() {
             {/* AI Result */}
             <div className="bg-white p-6 rounded-2xl shadow-md border border-emerald-100 relative overflow-hidden">
               <div className="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-emerald-500 to-teal-500 rounded-l-2xl"></div>
-              <p className="text-xs font-semibold text-emerald-600 uppercase tracking-wider mb-1 ml-4">AI Recommendation</p>
+              <p className="text-xs font-semibold text-emerald-600 uppercase tracking-wider mb-1 ml-4">{t("analysisTitle")}</p>
               <div className="flex flex-col sm:flex-row sm:items-baseline gap-2 mb-3 ml-4">
                 <span className="text-2xl font-bold text-gray-900">{result.specialist}</span>
                 {getUrgencyBadge(result.urgency)}
@@ -140,7 +142,7 @@ export default function Home() {
                   result.doctors.map((doc) => <DoctorCard key={doc.id} doctor={doc} />)
                 ) : (
                   <div className="text-center py-10 bg-white rounded-2xl shadow-sm border border-gray-100">
-                    <p className="text-gray-400 text-lg">No specialists found right now.</p>
+                    <p className="text-gray-400 text-lg">{t("noResults")}</p>
                   </div>
                 )}
               </div>

@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import { useTranslation } from "react-i18next";
 
 export default function Navbar() {
   const { currentUser, userRole, logout } = useAuth();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -18,6 +20,12 @@ export default function Navbar() {
     } catch (e) {
       console.error(e);
     }
+  };
+
+  const toggleLanguage = () => {
+    const newLang = i18n.language === "en" ? "ur" : "en";
+    i18n.changeLanguage(newLang);
+    document.documentElement.dir = newLang === "ur" ? "rtl" : "ltr";
   };
 
   const isDoctor = userRole?.toLowerCase() === "doctor";
@@ -48,21 +56,29 @@ export default function Navbar() {
           <div className="hidden md:flex items-center space-x-1">
             {(!currentUser || isPatient) && (
               <>
-                <Link to="/" className={linkClass("/")}>Home</Link>
-                <Link to="/doctors" className={linkClass("/doctors")}>Find Doctors</Link>
+                <Link to="/" className={linkClass("/")}>{t("home") || "Home"}</Link>
+                <Link to="/doctors" className={linkClass("/doctors")}>{t("findDoctor")}</Link>
               </>
             )}
             {currentUser && isPatient && (
               <>
-                <Link to="/profile" className={linkClass("/profile")}>My Profile</Link>
-                <Link to="/upload-report" className={linkClass("/upload-report")}>Upload Report</Link>
+                <Link to="/profile" className={linkClass("/profile")}>{t("myProfile")}</Link>
+                <Link to="/upload-report" className={linkClass("/upload-report")}>{t("uploadReport")}</Link>
               </>
             )}
             {currentUser && isDoctor && (
-              <Link to="/dashboard" className={linkClass("/dashboard")}>Dashboard</Link>
+              <Link to="/dashboard" className={linkClass("/dashboard")}>{t("dashboard")}</Link>
             )}
 
             <div className="h-6 w-px bg-emerald-400/40 mx-2"></div>
+
+            {/* Lang Toggle */}
+            <button
+              onClick={toggleLanguage}
+              className="px-2 py-1 rounded text-xs font-bold bg-white/20 text-white hover:bg-white/30 transition-colors uppercase mr-2"
+            >
+              {i18n.language === "en" ? "اردو" : "EN"}
+            </button>
 
             {currentUser ? (
               <div className="flex items-center space-x-3 ml-1">
@@ -78,7 +94,7 @@ export default function Navbar() {
                   onClick={handleLogout}
                   className="px-3 py-1.5 rounded-lg text-sm font-medium bg-white/15 text-white hover:bg-red-500/80 transition-all duration-200"
                 >
-                  Logout
+                  {t("logout")}
                 </button>
               </div>
             ) : (
@@ -92,18 +108,26 @@ export default function Navbar() {
           </div>
 
           {/* Mobile hamburger */}
-          <button
-            onClick={() => setMobileOpen(!mobileOpen)}
-            className="md:hidden text-white p-2 rounded-lg hover:bg-white/10 transition-colors"
-          >
-            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              {mobileOpen ? (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              )}
-            </svg>
-          </button>
+          <div className="md:hidden flex items-center gap-2">
+            <button
+              onClick={toggleLanguage}
+              className="px-2 py-1 rounded text-xs font-bold bg-white/20 text-white"
+            >
+              {i18n.language === "en" ? "اردو" : "EN"}
+            </button>
+            <button
+              onClick={() => setMobileOpen(!mobileOpen)}
+              className="text-white p-2 rounded-lg hover:bg-white/10 transition-colors"
+            >
+              <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                {mobileOpen ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                )}
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -112,24 +136,24 @@ export default function Navbar() {
         <div className="md:hidden border-t border-emerald-500/30 bg-emerald-800/95 backdrop-blur-md pb-4 px-4 space-y-1 pt-3">
           {(!currentUser || isPatient) && (
             <>
-              <Link to="/" className="block px-3 py-2.5 rounded-lg text-white hover:bg-white/10" onClick={() => setMobileOpen(false)}>Home</Link>
-              <Link to="/doctors" className="block px-3 py-2.5 rounded-lg text-white hover:bg-white/10" onClick={() => setMobileOpen(false)}>Find Doctors</Link>
+              <Link to="/" className="block px-3 py-2.5 rounded-lg text-white hover:bg-white/10" onClick={() => setMobileOpen(false)}>{t("home") || "Home"}</Link>
+              <Link to="/doctors" className="block px-3 py-2.5 rounded-lg text-white hover:bg-white/10" onClick={() => setMobileOpen(false)}>{t("findDoctor")}</Link>
             </>
           )}
           {currentUser && isPatient && (
             <>
-              <Link to="/profile" className="block px-3 py-2.5 rounded-lg text-white hover:bg-white/10" onClick={() => setMobileOpen(false)}>My Profile</Link>
-              <Link to="/upload-report" className="block px-3 py-2.5 rounded-lg text-white hover:bg-white/10" onClick={() => setMobileOpen(false)}>Upload Report</Link>
+              <Link to="/profile" className="block px-3 py-2.5 rounded-lg text-white hover:bg-white/10" onClick={() => setMobileOpen(false)}>{t("myProfile")}</Link>
+              <Link to="/upload-report" className="block px-3 py-2.5 rounded-lg text-white hover:bg-white/10" onClick={() => setMobileOpen(false)}>{t("uploadReport")}</Link>
             </>
           )}
           {currentUser && isDoctor && (
-            <Link to="/dashboard" className="block px-3 py-2.5 rounded-lg text-white hover:bg-white/10" onClick={() => setMobileOpen(false)}>Dashboard</Link>
+            <Link to="/dashboard" className="block px-3 py-2.5 rounded-lg text-white hover:bg-white/10" onClick={() => setMobileOpen(false)}>{t("dashboard")}</Link>
           )}
           <div className="border-t border-emerald-500/30 pt-3 mt-3">
             {currentUser ? (
               <div className="flex items-center justify-between">
                 <span className="text-emerald-200 text-sm truncate">{currentUser.email}</span>
-                <button onClick={() => { handleLogout(); setMobileOpen(false); }} className="px-3 py-1.5 rounded-lg text-sm font-medium bg-red-500/80 text-white">Logout</button>
+                <button onClick={() => { handleLogout(); setMobileOpen(false); }} className="px-3 py-1.5 rounded-lg text-sm font-medium bg-red-500/80 text-white">{t("logout")}</button>
               </div>
             ) : (
               <Link to="/login" className="block text-center px-4 py-2.5 rounded-lg font-semibold bg-white text-emerald-700" onClick={() => setMobileOpen(false)}>Login</Link>
