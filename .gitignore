@@ -95,3 +95,4 @@ firebase-debug.log
 .turbo/
 *.pem
 *.key
+serviceAccountKey.json
