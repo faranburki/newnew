@@ -1,0 +1,1 @@
+Analyze this medical report. Return ONLY valid JSON: {"summary": "string", "normal_values": ["list"], "abnormal_values": ["list"], "recommended_specialist": "string", "urgency": "routine|soon|urgent"}
