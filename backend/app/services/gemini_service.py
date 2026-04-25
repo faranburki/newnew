@@ -44,13 +44,25 @@ def analyze_symptoms(symptoms: str) -> dict:
         if text.endswith("```"):
             text = text[:-3]
             
-        return json.loads(text.strip())
+        data = json.loads(text.strip())
+        
+        # Check if specialist is missing or empty
+        if not data.get("specialist"):
+             return {
+                "fallback": True, 
+                "message": "Your symptoms are too general. Please describe the location of pain, how long it has been happening, and whether it is mild, moderate, or severe."
+            }
+            
+        return data
         
     except Exception as e:
         import traceback
         traceback.print_exc()
         print(f"Symptom Analysis failed: {e}")
-        return {"fallback": True, "message": "Please describe symptoms in more detail"}
+        return {
+            "fallback": True, 
+            "message": "Your symptoms are too general. Please describe the location of pain, how long it has been happening, and whether it is mild, moderate, or severe."
+        }
 
 def analyze_report(file_bytes: bytes, mime_type: str) -> dict:
     try:

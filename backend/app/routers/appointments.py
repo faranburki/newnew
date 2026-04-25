@@ -169,3 +169,19 @@ async def get_doctor_appointments(doctor_id: str):
         results.append(data)
 
     return results
+class StatusUpdate(BaseModel):
+    status: str
+
+
+@router.patch("/status/{appointment_id}")
+async def update_appointment_status(appointment_id: str, update: StatusUpdate):
+    """Update appointment status (confirmed, completed, cancelled)."""
+    db = get_firestore_db()
+    appt_ref = db.collection("appointments").document(appointment_id)
+    appt = appt_ref.get()
+
+    if not appt.exists:
+        raise HTTPException(status_code=404, detail="Appointment not found")
+
+    appt_ref.update({"status": update.status})
+    return {"message": f"Appointment status updated to {update.status}"}
