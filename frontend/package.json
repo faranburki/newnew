@@ -51,8 +51,10 @@
     "ajv-keywords": "^3.5.2"
   },
   
+  
   "engines": {
-    "node": "18.x"
+    "node": "24.x"
   }
 }
+
 
