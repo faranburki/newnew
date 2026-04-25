@@ -33,7 +33,7 @@ export default function PatientProfile() {
   const [reportsLoading, setReportsLoading] = useState(false);
   const [expandedReportId, setExpandedReportId] = useState(null);
 
-  const API_URL = process.env.REACT_APP_API_URL || "http://localhost:8000";
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
   // Load health profile from Firestore
   useEffect(() => {

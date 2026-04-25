@@ -10,7 +10,7 @@ export default function UploadReport() {
   const [error, setError] = useState("");
   const { currentUser } = useAuth();
   const navigate = useNavigate();
-  const API_URL = process.env.REACT_APP_API_URL || "http://localhost:8000";
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
   const onDrop = useCallback((acceptedFiles) => {
     if (acceptedFiles.length > 0) { setFile(acceptedFiles[0]); setError(""); }

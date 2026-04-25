@@ -15,7 +15,7 @@ export default function DoctorProfile() {
   const [error, setError] = useState("");
   const [selectedSlot, setSelectedSlot] = useState(null);
 
-  const API_URL = process.env.REACT_APP_API_URL || "http://localhost:8000";
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
   useEffect(() => {
     const fetchDoctor = async () => {

@@ -31,7 +31,7 @@ export default function SearchDoctors() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const { currentUser } = useAuth();
-  const API_URL = process.env.REACT_APP_API_URL || "http://localhost:8000";
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
   const fetchDoctors = async (spec) => {
     setLoading(true);

@@ -20,7 +20,7 @@ export default function BookAppointment() {
   const [confirmed, setConfirmed] = useState(null); // holds appointmentId on success
   const [emailSent, setEmailSent] = useState(false);
 
-  const API_URL = process.env.REACT_APP_API_URL || "http://localhost:8000";
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
   // Redirect if no state
   if (!slotId) {
@@ -44,8 +44,8 @@ export default function BookAppointment() {
   const sendConfirmationEmail = async (appointmentId) => {
     try {
       await emailjs.send(
-        process.env.REACT_APP_EMAILJS_SERVICE_ID || "YOUR_SERVICE_ID",
-        process.env.REACT_APP_EMAILJS_TEMPLATE_ID || "YOUR_TEMPLATE_ID",
+        import.meta.env.VITE_EMAILJS_SERVICE_ID || "YOUR_SERVICE_ID",
+        import.meta.env.VITE_EMAILJS_TEMPLATE_ID || "YOUR_TEMPLATE_ID",
         {
           doctor_name: doctorName,
           appointment_date: slotDate,
@@ -53,7 +53,7 @@ export default function BookAppointment() {
           patient_email: currentUser.email,
           appointment_id: appointmentId,
         },
-        process.env.REACT_APP_EMAILJS_PUBLIC_KEY || "YOUR_PUBLIC_KEY"
+        import.meta.env.VITE_EMAILJS_PUBLIC_KEY || "YOUR_PUBLIC_KEY"
       );
       setEmailSent(true);
     } catch (emailErr) {

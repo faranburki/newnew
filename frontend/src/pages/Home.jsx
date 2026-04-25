@@ -13,7 +13,7 @@ export default function Home() {
   const textareaRef = useRef(null);
 
   const { currentUser } = useAuth();
-  const API_URL = process.env.REACT_APP_API_URL || "http://localhost:8000";
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
